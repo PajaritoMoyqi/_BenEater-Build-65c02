@@ -3,9 +3,9 @@
 */
 
 /*
-  This code Makes LED bulbs blink left to right.
+  This code makes LED bulbs blink left to right.
 
-  Cautions at '.org', '.word' and lable.
+  Cautions at '.org', '.word' and label.
 */
 
   # origin directive: tells assembler where this codes below should be placed in memory

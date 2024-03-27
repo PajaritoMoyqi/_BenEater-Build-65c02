@@ -5,7 +5,7 @@
 /*
   Make same code of video 2 using Assembly language.
 
-  Cautions at '.org', '.word' and lable.
+  Cautions at '.org', '.word' and label.
 */
 
   # origin directive: tells assembler where this codes below should be placed in memory
