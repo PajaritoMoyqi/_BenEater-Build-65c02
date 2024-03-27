@@ -8,6 +8,7 @@
 
 rom = bytearray([0xEA] * 32768)
 
+# some instructions
 # LDA #$42
 rom[0] = 0xA9
 rom[1] = 0x42
@@ -17,7 +18,7 @@ rom[2] = 0x8D
 rom[3] = 0x00
 rom[4] = 0x60
 
-# start address 0x8000 which is same as rom[0]
+# start address 0x8000 - little endian
 rom[0x7FFC] = 0x00
 rom[0x7FFD] = 0x80
 

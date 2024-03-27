@@ -7,7 +7,7 @@
 
 rom = bytearray([0xEA] * 32768)
 
-# start address 0x8000
+# start address 0x8000 - little endian
 rom[0x7FFC] = 0x00
 rom[0x7FFD] = 0x80
 
