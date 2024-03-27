@@ -27,7 +27,7 @@ All files for Ben Eater's incredible 6502(65c02) breadboard computer making lect
 
 ### Video 3
 
-
+3-1_compare.s: make same code of video 2 using Assembly language (w/ '.org', '.word')<br>
 
 ### Video 4
 
