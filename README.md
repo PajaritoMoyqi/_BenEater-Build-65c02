@@ -21,6 +21,7 @@ All files for Ben Eater's incredible 6502(65c02) breadboard computer making lect
 ### Video 2
 
 2-1_makerom.py: make every byte of data of EEPROM as 'nop' instruction<br>
+2-2_makerom.py: make every byte of data of EEPROM as 'nop' instruction except the places where start address is stored<br>
 
 ### Video 3
 
