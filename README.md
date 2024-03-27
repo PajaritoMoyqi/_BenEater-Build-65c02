@@ -63,7 +63,7 @@ No code<br>
 
 ### Video 10
 
-
+10-1_binary_to_decimal.s: print decimal number using algorithm for binary division<br>
 
 ### Video 11
 
