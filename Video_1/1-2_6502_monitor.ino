@@ -23,6 +23,7 @@ void setup()
     Serial.begin( 57600 );
 }
 
+// interrupt handler
 void onClock()
 {
     // print all 16-bits
