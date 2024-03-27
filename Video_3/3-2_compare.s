@@ -1,4 +1,8 @@
 /*
+  EEPROM is mapped from 0x8000 to 0xFFFF.
+*/
+
+/*
   Make same code of video 2 using Assembly language.
 
   Cautions at '.org', '.word' and lable.
