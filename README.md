@@ -58,6 +58,7 @@ No code<br>
 ### Video 9
 
 9-1_hello_world.s: print "hello, world!" using 750 'nop' instructions to give enough time to LCD monitor to execute initialization instructions<br>
+9-2_hello_world.s: print "hello, world!" checking busy flag to give enough time to LCD monitor to execute instructions<br>
 
 ### Video 10
 
