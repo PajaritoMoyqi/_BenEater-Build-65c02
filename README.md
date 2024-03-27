@@ -6,6 +6,10 @@ All files for Ben Eater's incredible 6502(65c02) breadboard computer making lect
 
 ## Structure
 
+### Schematics
+
+
+
 ### Memory map
 
 
@@ -33,7 +37,7 @@ All files for Ben Eater's incredible 6502(65c02) breadboard computer making lect
 
 ### Video 4
 
-
+4-1_hello_world.s: print "hello, world!" using I/O controller and LCD monitor connected<br>
 
 ### Video 5
 
