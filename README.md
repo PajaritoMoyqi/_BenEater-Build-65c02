@@ -41,15 +41,15 @@ All files for Ben Eater's incredible 6502(65c02) breadboard computer making lect
 
 ### Video 5
 
-
+5-1_hello_world.s: print "hello, world!" using subrutine w/o memory - so, not working<br>
 
 ### Video 6
 
-
+No code
 
 ### Video 7
 
-
+7-1_hello_world.s: print "hello, world!" using subrutine w/ memory, and clear display instruction added<br>
 
 ### Video 8
 
