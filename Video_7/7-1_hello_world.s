@@ -9,7 +9,6 @@
 
 /*
   This code shows letters on LCD monitor.
-  But not working because of lack of memory to use stack.
 
   Cautions at subrutine, 'JRS', 'RTS', 'TXS'.
 */
