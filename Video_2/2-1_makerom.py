@@ -1,5 +1,7 @@
 """
-  make all EEPROM memory data as nop instruction
+  EEPROM is mapped 0x8000 to 0xFFFF.
+
+  Make all EEPROM memory data as nop instruction.
 """
 
 rom = bytearray([0xEA] * 32768)
