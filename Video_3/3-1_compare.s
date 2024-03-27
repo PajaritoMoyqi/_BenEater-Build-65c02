@@ -1,5 +1,6 @@
 /*
-  EEPROM is mapped from 0x8000 to 0xFFFF.
+  EEPROM(AT28C256) is mapped from 0x8000 to 0xFFFF. - to program a computer
+  I/O controller(W65C22) is mapped from 0x6000 to 0x7FFF. - to make output data meaningful
 */
 
 /*

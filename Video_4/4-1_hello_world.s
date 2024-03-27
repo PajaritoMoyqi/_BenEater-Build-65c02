@@ -1,18 +1,18 @@
 /*
-  EEPROM(AT28C256) is mapped from 0x8000 to 0xFFFF.
-  I/O controller(W65C22) is mapped from 0x6000 to 0x7FFF.
+  EEPROM(AT28C256) is mapped from 0x8000 to 0xFFFF. - to program a computer
+  I/O controller(W65C22) is mapped from 0x6000 to 0x7FFF. - to make output data meaningful
     I/O controller setting registers are mapped from 0x6000 to 0x600F.
-      PORTA is for flag bits, PORTB is for data bits when using LCD monitor connected.
+      part of PORTA is for flag bits, PORTB is for data bits when using LCD monitor connected.
 */
 
 /*
-  This code makes LED bulbs blink left to right.
+  This code shows letters on LCD monitor.
 
   Cautions at '.org', '.word' and label.
 */
 
-PORTB = $6000 # I/O setting register for port B
-PORTA = $6001 # I/O setting register for port A
+PORTB = $6000 # I/O signal through port B
+PORTA = $6001 # I/O signal through port A
 DDRB = $6002 # Data direction setting register for port B
 DDRA = $6003 # Data direction setting register for port A
 
@@ -197,8 +197,8 @@ init:
   LDA #RS # clear data protocol
   STA PORTA
 
-loop:
   # work as if it is the end of the program
+loop:
   JMP loop
 
   # from 0xFFFC we save 0x00 and 0x80 which is starting execution address
