@@ -45,7 +45,7 @@ All files for Ben Eater's incredible 6502(65c02) breadboard computer making lect
 
 ### Video 6
 
-No code
+No code<br>
 
 ### Video 7
 
@@ -53,11 +53,13 @@ No code
 
 ### Video 8
 
-
+No code<br>
 
 ### Video 9
 
-
+9-1_hello_world.s: print "hello, world!" using 750 'nop' instructions to give enough time to LCD monitor to execute initialization instructions<br>
+9-2_hello_world.s: print "hello, world!" checking busy flag to give enough time to LCD monitor to execute instructions<br>
+9-3_hello_world.s: print "hello, world!" w/ refactored print_char subrutine<br>
 
 ### Video 10
 
