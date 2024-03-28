@@ -78,11 +78,15 @@ No code<br>
 
 ### Video 13
 
-
+No code
 
 ### Video 14
 
+¡Cautions! All pins of PORTA, which was partly a output pins for LCD monitor, is now used to read input data from keyboard. To solve this problem, Ben Eater changed the hardware and the code without mention it in public video. To get every changes, I played and stopped in very short interval(25:48-25:50 in the video) and looked up a final code([keyboard.s](https://eater.net/downloads/keyboard.s "keyboard.s")), which is gonna be completed in later video, by Ben Eater.
 
+According to datasheet, D0-D3 pins are not used during 4-bit operation. Considering the changed code shown in the video, he may connected DB4 to DB7 of LCD to PB0 to PB3 of I/O controller. And RS to PB4, RW to PB5 and E to PB6. I guess PB7 isn't used as an important pin in this video.
+
+14-1_keyboard_irq.s: shows transmitted protocol data from keyboard continuously using irq handler w/ I/O controller<br>
 
 ### Video 15
 
