@@ -1,2 +1,8 @@
+# execution files for assembler
+*.dll
+vasm6502_oldstyle.*
+vobjdump.*
+
+# result files
 *.bin
 *.out
