@@ -101,10 +101,10 @@ div_start:
   LDA #0
   STA mod10
   STA mod10 + 1
-  
-  LDX #16 # index of div_loop
+
   CLC # clear the carry bit
 
+  LDX #16 # index of div_loop
 div_loop:
   ; rotate left 1-bit quotient and remainder
   ROL value
@@ -258,7 +258,7 @@ check_busy_flag_loop:
   ; interrupt handlers
 nmi_handler:
 irq_handler:
-  # store original value of X register and Y register to use it when give long delay
+  # store original value of Accumulator, X register and Y register to use it when give long delay
   PHA
   TXA
   PHA
@@ -284,7 +284,7 @@ interrupt_handler_delay:
   # so when you get interrupt and read port A, then CPU know what keypress(if interrupt comes from keyboard) makes the interrupt
   BIT PORTA # to not affect to Accumulator, use BIT command
 
-  # restore original value of X register and Y register from the stack
+  # restore original value of Accumulator, X register and Y register from the stack
   PLA
   TAY
   PLA

@@ -100,10 +100,10 @@ div_start:
   LDA #0
   STA mod10
   STA mod10 + 1
-  
-  LDX #16 # index of div_loop
+
   CLC # clear the carry bit
 
+  LDX #16 # index of div_loop
 div_loop:
   ; rotate left 1-bit quotient and remainder
   ROL value
