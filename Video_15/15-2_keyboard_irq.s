@@ -10,6 +10,7 @@
 
 /*
   This code shows string data from keyboard continuously using irq handler w/ I/O controller.
+  Effect of duplicated data, with release key data of PS/2 protocol, has been removed.
 
   ¡ Note that now we are using port B to transfer flag bits, and port A as a main route where data transmition occurs !
   Now all pins of port A is connected to shift register which is connected to keyboard,
@@ -31,6 +32,10 @@ kb_buffer = $0200 # 256-byte kb buffer, from 0x0200 to 0x02FF
 # 8-bit pointer, so kb_buffer is now automatically circular list
 kb_wptr = $0000
 kb_rptr = $0001
+# to check it's duplicated data or not
+kb_flags = $0002
+
+RELEASE = %00000001
 
 # flags for PORTB
 E = %01000000
@@ -230,8 +235,27 @@ irq_handler:
   TXA
   PHA
 
+  # check release flag
+  LDA kb_flags
+  AND #RELEASE
+  BEQ read_key # if we are not in state where key released
+
+  # flip release flag
+  LDA kb_flags
+  EOR #RELEASE
+  STA kb_flags
+
+  # read duplicated data and exit
+  LDA PORTA
+  JMP exit_irq_handler
+
+read_key:
   # read data, clearing the interrupt systematically
   LDA PORTA
+
+  # check whether it's release key signal or not
+  CMP #$F0
+  BEQ released_key_handler # if the data is released key data
 
   # change scan code to ascii code using keymap
   TAX
@@ -242,7 +266,15 @@ irq_handler:
   # our loop is printing a character in kb_buffer continuously
 
   INC kb_wptr
+  JMP exit_irq_handler
 
+released_key_handler:
+  # set release flag
+  LDA kb_flags
+  ORA #RELEASE
+  STA kb_flags
+
+exit_irq_handler:
   # restore original value of Accumulator and X register from the stack
   PLA
   TAX
