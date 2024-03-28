@@ -19,7 +19,7 @@
   Cautions at 'LSR'.
 */
 
-; I/O controller
+;;; I/O controller ;;;
 PORTB = $6000 # I/O signal through port B
 PORTA = $6001 # I/O signal through port A
 DDRB = $6002 # Data direction setting register for port B
@@ -28,12 +28,12 @@ PCR = $600C # Peripheral control register which decide where to detect as an int
 IFR = $600D # Interrupt flag register that CPU can see what cause the interrupt
 IER = $600E # Interrupt enable register
 
-; binary to decimal
+;;; binary to decimal ;;;
 value = $0200 # 2-bytes of number that we want to convert
 mod10 = $0202 # 2-bytes of number space where we operate '- 10' operation
 message = $0204 # 6-bytes of string in maximum, because we are working with 2-bytes number which has its maximum value 65535 in decimal, and also null character included
 
-; counter
+;;; counter ;;;
 counter = $020A # 2-bytes of number that counts the number of interrupt
 
 # flags for PORTB
@@ -60,7 +60,7 @@ init:
   LDA #$01
   STA PCR
 
-  ; set data directions
+  ;;; set data directions ;;;
   # set all pins on port B to output(to LCD monitor)
   LDA #%11111111
   STA DDRB
@@ -68,7 +68,7 @@ init:
   LDA #%00000000
   STA DDRA
 
-  ; set initial setting for display of LCD monitor
+  ;;; set initial setting for display of LCD monitor ;;;
   JSR lcd_init # set 4-bits mode
   LDA #%00101000 # 4-bits mode, 2-line display, 5x8 font
   JSR lcd_send_instruction
@@ -79,15 +79,15 @@ init:
   LDA #%00000001 # Clear display
   JSR lcd_send_instruction
 
-  ; initialization of counter variable
+  ;;; initialization of counter variable ;;;
   LDA #0
   STA counter
   STA counter + 1
 
-  ; loop for printing counter continuously
-  ; algorithm for binary division included
+  ;;; loop for printing counter continuously ;;;
+  ;;; algorithm for binary division included ;;;
 loop:
-  ; initialization
+  ;;; initialization ;;;
   LDA #0
   STA message # empty string
 
@@ -105,13 +105,13 @@ div_start:
 
   LDX #16 # index of div_loop
 div_loop:
-  ; rotate left 1-bit quotient and remainder
+  ;;; rotate left 1-bit quotient and remainder ;;;
   ROL value
   ROL value + 1
   ROL mod10
   ROL mod10 + 1
 
-  ; a, y = dividend - divisor
+  ;;; a, y = dividend - divisor ;;;
   SEC # set carry bit to check the '- 10' operation result is negative or not
   LDA mod10
   SBC #10
@@ -146,7 +146,7 @@ decrement_index:
 
   BNE div_start # if value is not zero
 
-  ; write letters in LCD monitor
+  ;;; write letters in LCD monitor ;;;
   LDX #0
 lcd_print:
   # load next character
@@ -160,7 +160,7 @@ lcd_print:
 
 number: .word 0
 
-  ; subrutines
+  ;;; subrutines ;;;
 ram_push_char:
   PHA # push new character onto stack
   LDY #0 # start index of string
@@ -297,7 +297,7 @@ check_busy_flag_loop:
   AND #%00001000 # MSB of last 4-bits(nibble) is where LCD monitor gives the result of busy flag
   BNE check_busy_flag_loop # if not zero, in other words, if zero flag is not set after AND operation, that is, if LCD is busy
 
-  ; clear instructions
+  ;;; clear instructions ;;;
   # turn off enable bit
   LDA #RW
   STA PORTB
@@ -310,7 +310,7 @@ check_busy_flag_loop:
 
   RTS
 
-  ; interrupt handlers
+  ;;; interrupt handlers ;;;
 nmi_handler:
 irq_handler:
   # store original value of Accumulator
