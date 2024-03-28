@@ -9,10 +9,10 @@
 */
 
 /*
-  This code shows interrupt counter continuously using irq handler.
-  But it counts a interrupt not once.
+  This code shows interrupt counter continuously using nmi handler.
+  But it has vulnerabilities in situations where multiple interrupts exists at the same time.
 
-  Cautions at 'RTI'.
+  Cautions at 'RTI', 'SEI'.
 */
 
 ; I/O controller
@@ -79,10 +79,12 @@ loop:
   LDA #0
   STA message # empty string
 
+  SEI # set interrupt disable bit to prevent duplicated interrupt while read counter variable
   LDA counter
   STA value
   LDA counter + 1
   STA value + 1
+  CLI
 
 div_start:
   LDA #0
@@ -244,15 +246,12 @@ check_busy_flag_loop:
 
   ; interrupt handlers
 nmi_handler:
-
-  RTI # return from interrupt
-
 irq_handler:
   INC counter
-  BNE exit_irq_handler
+  BNE exit_interrupt_handler
   INC counter + 1
 
-exit_irq_handler:
+exit_interrupt_handler:
   RTI # return from interrupt
 
   # from 0xFFFC we save 0x00 and 0x80 which is starting execution address
