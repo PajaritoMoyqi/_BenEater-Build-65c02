@@ -26,6 +26,7 @@ value = $0200 # 2-bytes of number that we want to convert
 mod10 = $0202 # 2-bytes of number space where we operate '- 10' operation
 message = $0204 # 6-bytes of string in maximum, because we are working with 2-bytes number which has its maximum value 65535 in decimal, and also null character included
 
+; counter
 counter = $020A # 2-bytes of number that counts the number of interrupt
 
 # flags for PORTA
