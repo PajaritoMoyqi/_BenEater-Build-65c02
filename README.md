@@ -90,7 +90,9 @@ According to datasheet, D0-D3 pins are not used during 4-bit operation. Consider
 
 ### Video 15
 
-
+15-1_keyboard_irq.s: shows transmitted characters from keyboard continuously w/ keymap<br>
+15-2_keyboard_irq.s: shows transmitted characters from keyboard continuously w/ keymap - release key & duplicated key data dealt<br>
+15-3_keyboard_irq.s: shows transmitted characters from keyboard continuously w/ keymap - release key & duplicated key data dealt, shift key dealt<br>
 
 ### Video 16
 
@@ -101,6 +103,4 @@ According to datasheet, D0-D3 pins are not used during 4-bit operation. Consider
 
 
 ### Video 18
-
-
 
