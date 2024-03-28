@@ -9,7 +9,8 @@
 */
 
 /*
-  This code shows interrupt counter continuously using irq handler.
+  This code shows interrupt counter continuously using irq handler w/ I/O controller.
+  Enhanced by intentional delay to get rid of bouncing effect of the switch.
 
   Cautions at 'BIT'.
 */
@@ -257,7 +258,7 @@ check_busy_flag_loop:
   ; interrupt handlers
 nmi_handler:
 irq_handler:
-  # save original value of X register and Y register to use it when give long delay
+  # store original value of X register and Y register to use it when give long delay
   PHA
   TXA
   PHA
@@ -283,7 +284,7 @@ interrupt_handler_delay:
   # so when you get interrupt and read port A, then CPU know what keypress(if interrupt comes from keyboard) makes the interrupt
   BIT PORTA # to not affect to Accumulator, use BIT command
 
-  # restore original value of X register and Y register
+  # restore original value of X register and Y register from the stack
   PLA
   TAY
   PLA

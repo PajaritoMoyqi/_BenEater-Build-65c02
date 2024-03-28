@@ -9,7 +9,7 @@
 */
 
 /*
-  This code shows interrupt counter continuously using irq handler.
+  This code shows interrupt counter continuously using irq handler w/ I/O controller.
 
   Cautions at 'BIT'.
 */
