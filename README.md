@@ -73,7 +73,8 @@ No code<br>
 
 ### Video 12
 
-
+12-1_interrupt.s: interrupt counter using irq handler w/ I/O controller<br>
+12-2_interrupt.s: interrupt counter using irq handler w/ I/O controller and delay to get rid of switch bouncing problem<br>
 
 ### Video 13
 
