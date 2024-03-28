@@ -98,7 +98,7 @@ decrement_index:
 
   # shift in the last bit of the quotient
   ROL value
-  ROl value + 1
+  ROL value + 1
 
   # get number character
   LDA mod10
