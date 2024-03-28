@@ -257,15 +257,38 @@ check_busy_flag_loop:
   ; interrupt handlers
 nmi_handler:
 irq_handler:
+  # save original value of X register and Y register to use it when give long delay
+  PHA
+  TXA
+  PHA
+  TYA
+  PHA
+
   INC counter
   BNE exit_interrupt_handler
   INC counter + 1
 
 exit_interrupt_handler:
+  ; long delay to resolve switch bouncing problem
+  LDY #$ff
+  LDX #$ff
+interrupt_handler_delay:
+  DEX
+  BNE interrupt_handler_delay
+  DEY
+  BNE interrupt_handler_delay
+
   # clear the interrupt by reading port A, that is, CPU tells I/O controller that "now I handle your interrupt, so you now can release your interrupt signal to let me know"
   # the reason reading port A clears the CA1 interrupt is 'maybe' that they assumed that 8 interrupt signals are OR-connected to CA1, and each interrupt signal is connected to the pin of port A
   # so when you get interrupt and read port A, then CPU know what keypress(if interrupt comes from keyboard) makes the interrupt
   BIT PORTA # to not affect to Accumulator, use BIT command
+
+  # restore original value of X register and Y register
+  PLA
+  TAY
+  PLA
+  TAX
+  PLA
 
   RTI # return from interrupt
 
