@@ -25,7 +25,7 @@ RS = %00100000
   .org $8000
 
 init:
-  ;; set data directions ;;
+  ;;; set data directions ;;;
   ; set all pins on port B to output
   ; which are the pins connected to D0-D7
   LDA #%11111111
@@ -35,7 +35,7 @@ init:
   LDA #%11100000
   STA DDRA
 
-  ;; set initial setting for display of LCD monitor ;;
+  ;;; set initial setting for display of LCD monitor ;;;
   LDA #%00111000 ; 8-bit mode, 2-line display, 5x8 font
   STA PORTB
   ; sending instruction protocol
@@ -66,7 +66,7 @@ init:
   LDA #0 ; clear setting protocol
   STA PORTA
 
-  ;; write letters in LCD monitor ;;
+  ;;; write letters in LCD monitor ;;;
   LDA #"H" ; ascii code of letter 'H'
   STA PORTB
   ; sending data protocol

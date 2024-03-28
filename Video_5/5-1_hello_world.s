@@ -34,7 +34,7 @@ init:
   LDX #$FF
   TXS
 
-  ;; set data directions ;;
+  ;;; set data directions ;;;
   ; set all pins on port B to output
   ; which are the pins connected to D0-D7
   LDA #%11111111
@@ -44,7 +44,7 @@ init:
   LDA #%11100000
   STA DDRA
 
-  ;; set initial setting for display of LCD monitor ;;
+  ;;; set initial setting for display of LCD monitor ;;;
   LDA #%00111000 ; 8-bit mode, 2-line display, 5x8 font
   JSR lcd_send_instruction
   LDA #%00001110 ; display on, cursor on, blink off
@@ -52,7 +52,7 @@ init:
   LDA #%00000110 ; increment and shift cursor, do not shift display
   JSR lcd_send_instruction
 
-  ;; write letters in LCD monitor ;;
+  ;;; write letters in LCD monitor ;;;
   LDA #"H" ; ascii code of letter 'H'
   JSR lcd_print_char
   LDA #"e" ; ascii code of letter 'e'
@@ -84,7 +84,7 @@ init:
 loop:
   JMP loop
 
-  ;; subrutines ;;
+  ;;; subrutines ;;;
 lcd_send_instruction:
   ; PHA ; put current value of Accumulator in Stack if needed
 
