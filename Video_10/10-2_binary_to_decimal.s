@@ -9,9 +9,9 @@
 
 /*
   This code shows decimal number on LCD monitor.
-  But in reverse...
+  In sequence.
 
-  Cautions at 'ROL', 'SEC', 'TAY', 'STY', 'STA', 'CLC'.
+  Cautions at 'ROL', 'SEC', 'TAY', 'STY', 'STA', 'CLC', 'BCC'.
 */
 
 ; I/O controller
@@ -23,6 +23,7 @@ DDRA = $6003 # Data direction setting register for port A
 ; binary to decimal
 value = $0200 # 2-bytes of number that we want to convert
 mod10 = $0202 # 2-bytes of number space where we operate '- 10' operation
+message = $0204 # 6-bytes of string in maximum, because we are working with 2-bytes number which has its maximum value 65535 in decimal, and also null character included
 
 # flags for PORTA
 E = %10000000
@@ -59,6 +60,9 @@ init:
 
   ; algorithm for binary division
   ; initialization
+  LDA #0
+  STA message # empty string
+
   LDA number
   STA value
   LDA number + 1
@@ -106,13 +110,25 @@ decrement_index:
   ADC #"0" # add memory to Accumulator with Carry bit
 
   # print out
-  JSR lcd_print_char
+  JSR ram_push_char
 
   # check value is zero or not
   LDA value
   ORA value + 1
 
   BNE div_start # if value is not zero
+
+  ; write letters in LCD monitor
+  LDX #0
+lcd_print:
+  # load next character
+  LDA message, x
+  BEQ loop # if zero flag is set, that is, if character is null character
+
+  # print character
+  JSR lcd_print_char
+  INX
+  JMP lcd_print
 
   # work as if it is the end of the program
 loop:
@@ -121,6 +137,32 @@ loop:
 number: .word 1729 # 2-bytes
 
   ; subrutines
+ram_push_char:
+  PHA # push new character onto stack
+  LDY #0 # start index of string
+
+push_char_loop:
+  # get original character
+  LDA message, y
+  TAX # store it in X register
+
+  # put previous character at current position
+  PLA
+  STA message, y
+
+  # put current character onto stack
+  INY
+  TXA
+  PHA
+
+  BNE push_char_loop # if current character is not zero
+  
+  # put null character at the end of the string
+  PLA
+  STA message, y
+
+  RTS
+
 lcd_send_instruction:
   # PHA # put current value of Accumulator in Stack if needed
 
