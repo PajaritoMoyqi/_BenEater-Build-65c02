@@ -11,6 +11,7 @@
 /*
   This code shows string data from keyboard continuously using irq handler w/ I/O controller.
   Effect of duplicated data, with release key data of PS/2 protocol, has been removed.
+  Effect of shift key now operates as we expect.
 
   ¡ Note that now we are using port B to transfer flag bits, and port A as a main route where data transmition occurs !
   Now all pins of port A is connected to shift register which is connected to keyboard,
@@ -36,6 +37,7 @@ kb_rptr = $0001
 kb_flags = $0002
 
 RELEASE = %00000001
+SHIFT = %00000010
 
 # flags for PORTB
 E = %01000000
@@ -84,7 +86,7 @@ init:
   STA kb_rptr
   STA kb_wptr
   STA kb_flags
-  
+
 loop:
   SEI # set interrupt disable bit
   # read two pointers
@@ -246,8 +248,20 @@ irq_handler:
   EOR #RELEASE
   STA kb_flags
 
-  # read duplicated data and exit
+  # read duplicated data which is released just now
   LDA PORTA
+  CMP #$12 # left shift
+  BEQ releasing_shift_key_handler
+  CMP #$59 # right shift
+  BEQ releasing_shift_key_handler
+
+  JMP exit_irq_handler
+
+releasing_shift_key_handler:
+  # flip shift flag
+  LDA kb_flags
+  EOR #SHIFT
+  STA kb_flags
   JMP exit_irq_handler
 
 read_key:
@@ -257,16 +271,41 @@ read_key:
   # check whether it's release key signal or not
   CMP #$F0
   BEQ released_key_handler # if the data is released key data
+  # check whether it's shift key signal or not
+  CMP #$12 # left shift key
+  BEQ shifted_key_handler # if the data is left shift key data
+  CMP #$59 # right shift key
+  BEQ shifted_key_handler # if the data is right shift key data
+
+  # store offset to X register
+  TAX
+
+  # 
+  LDA kb_flags
+  AND #SHIFT
+  BNE convert_to_shited_ascii
 
   # change scan code to ascii code using keymap
-  TAX
   LDA keymap, x
+  JMP push_key
 
+convert_to_shited_ascii:
+  # change scan code to shifted ascii code using shifted_keymap
+  LDA shifted_keymap, x
+
+push_key:
   LDX kb_wptr # offset
   STA kb_buffer, x # store it into kb_buffer list
   # our loop is printing a character in kb_buffer continuously
 
   INC kb_wptr
+  JMP exit_irq_handler
+
+shifted_key_handler:
+  # set shift flag
+  LDA kb_flags
+  ORA #SHIFT
+  STA kb_flags
   JMP exit_irq_handler
 
 released_key_handler:
@@ -284,9 +323,9 @@ exit_irq_handler:
   RTI # return from interrupt
 
   ; scan code to ascii code
-  .org $FE00
+  .org $FD00
+  # question marks in keymaps mean 'not defined' or '?' itself
 keymap:
-  # question mark means 'not defined' or itself
   .byte "????????????? `?" # 00-0F
   .byte "?????q1???zsaw2?" # 10-1F
   .byte "?cxde43?? vftr5?" # 20-2F
@@ -303,6 +342,23 @@ keymap:
   .byte "????????????????" # D0-DF
   .byte "????????????????" # E0-EF
   .byte "????????????????" # F0-FF
+shifted_keymap:
+  .BYTE "????????????? ~?" # 00-0F
+  .BYTE "?????Q!???ZSAW@?" # 10-1F
+  .BYTE "?CXDE$#?? VFTR%?" # 20-2F
+  .BYTE "?NBHGY^???MJU&*?" # 30-3F
+  .BYTE "?<KIO)(??>?L:P_?" # 40-4F
+  .BYTE "??"?{+?????}?|??" # 50-5F
+  .BYTE "?????????!?47???" # 60-6F
+  .BYTE "0.2568???+3-*9??" # 70-7F
+  .BYTE "????????????????" # 80-8F
+  .BYTE "????????????????" # 90-9F
+  .BYTE "????????????????" # A0-AF
+  .BYTE "????????????????" # B0-BF
+  .BYTE "????????????????" # C0-CF
+  .BYTE "????????????????" # D0-DF
+  .BYTE "????????????????" # E0-EF
+  .BYTE "????????????????" # F0-FF
 
   # from 0xFFFC we save 0x00 and 0x80 which is starting execution address
   .org $FFFA
