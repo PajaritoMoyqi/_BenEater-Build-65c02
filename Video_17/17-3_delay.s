@@ -9,7 +9,7 @@
 ;  ..........................................................................................
 
 ;  ..........................................................................................
-;  This code shows simple delay using double loop.
+;  This code shows delay w/ I/O controller timer1, in one-shot mode.
 ;
 ;  ¡ Note that now we are using port B to transfer flag bits, and port A as a main route where data transmition occurs !
 ;  all pins of port B is connected to LCD monitor where PB0 to PB3 is connected to DB4 to DB7 of LCD monitor,
@@ -20,14 +20,21 @@ PORTB = $6000
 PORTA = $6001
 DDRB = $6002
 DDRA = $6003
+T1CL = $6004
+T1CH = $6005
+ACR = $600B
+IFR = $600D
 
   .org $8000
 
 init:
+  ; set direction
   LDA #%11111111 ; set all pins on port A to output
   STA DDRA
+
   LDA #0
   STA PORTA
+  STA ACR ; one-shot mode
 
 loop:
   INC PORTA ; turn LED on
@@ -36,19 +43,21 @@ loop:
   JSR delay
   JMP loop
 
+  ;;; subrutines ;;;
 delay:
-  LDY #$FF
-delay_2:
-  LDX #$FF
-delay_1:
-  ; delay
-  NOP
+  ; 50000 is 0xC350
+  LDA #$50
+  STA T1CL
+  LDA #$C3
+  STA T1CH
 
-  DEX
-  BNE delay_1
+wait_interrupt_signal:
+  ;; can do other works while clock ticks ;;
 
-  DEY
-  BNE delay_2
+  BIT IFR ; store timer1 interrupt siganl to overflow flag
+  BVC wait_interrupt_signal ; if overflow flag is 0
+
+  LDA T1CL ; clear interrupt flag
 
   RTS
 

@@ -9,10 +9,9 @@
 ;  ..........................................................................................
 
 ;  ..........................................................................................
-;  This code receives id data sent from sensor continuously.
+;  This code shows simple delay using single loop.
 ;
 ;  ¡ Note that now we are using port B to transfer flag bits, and port A as a main route where data transmition occurs !
-;  Now all pins of port A is connected to shift register which is connected to keyboard,
 ;  all pins of port B is connected to LCD monitor where PB0 to PB3 is connected to DB4 to DB7 of LCD monitor,
 ;  PB4 to RS, PB5 to RW and PB6 to E of LCD. I have no idea where PB7 is connected to.
 ;  ..........................................................................................

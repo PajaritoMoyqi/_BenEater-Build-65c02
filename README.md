@@ -105,6 +105,7 @@ According to datasheet, D0-D3 pins are not used during 4-bit operation. Consider
 
 17-1_delay.s: simple delay with single loop<br>
 17-2_delay.s: simple delay with double loop<br>
+17-3_delay.s: delay w/ I/O controller(W65C22) timer in one-shot mode<br>
 
 ### Video 18
 
