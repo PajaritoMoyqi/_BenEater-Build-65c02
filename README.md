@@ -96,7 +96,10 @@ According to datasheet, D0-D3 pins are not used during 4-bit operation. Consider
 
 ### Video 16
 
+¡Cautions! '16-2_sensor.s' code is not completed.
 
+16-1_sensor.s: receives data sent from sensor continuously<br>
+~~16-2_sensor.s: receives data sent from sensor continuously~~ (not working, full-code not provided)<br>
 
 ### Video 17
 
