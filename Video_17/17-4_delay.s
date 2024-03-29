@@ -54,13 +54,14 @@ toggle_led:
   LDA ticks
   SBC elapsed_time
   CMP #25 ; have 250ms elapsed? -> carry bit is set
-  BCC exit_toggle_led ; if carry bit is low
+  BCC exit_toggle_led ; if carry bit is low(if not elapsed)
 
   ; toggle LED
   LDA #$01
   EOR PORTA
   STA PORTA
 
+  ; update elapsed_time
   LDA ticks
   STA elapsed_time
 
