@@ -1,4 +1,5 @@
 ; ¡ WARNING: This code is not working !
+; keyword to solve: 'timer'
 
 ;  ..........................................................................................
 ;  EEPROM(AT28C256) is mapped from 0x8000 to 0xFFFF. - to program a computer
@@ -29,17 +30,20 @@ IFR = $600D ; Interrupt flag register that CPU can see what cause the interrupt
 IER = $600E ; Interrupt enable register
 
 ;;; binary to decimal ;;;
-value = $0200 ; 2-bytes of number that we want to convert
+value = $0200 ; 2-bytes of number that contains data, which is the number that we want to convert, from sensor
 mod10 = $0202 ; 2-bytes of number space where we operate '- 10' operation
 message = $0204 ; 6-bytes of string in maximum, because we are working with 2-bytes number which has its maximum value 65535 in decimal, and also null character included
 
-;;; counter ;;;
-counter = $020A ; 2-bytes of number that counts the number of interrupt
+;;; sensor ;;;
+spiin = $020A ; 1-byte
+spiout = $020B ; 1-byte
+timer = $020C ;  1-byte
 
-; flags for PORTB
-E = %01000000
-RW = %00100000
-RS = %00010000
+;;; flags ;;;
+SCK = %00000001
+MOSI = %00000010
+CS = %00000100
+MISO = %01000000
 
   ; origin directive: tells assembler where this codes below should be placed in memory
   .org $8000
@@ -49,23 +53,16 @@ init:
   LDX #$FF
   TXS
 
-  ; clear interrupt disable bit
-  CLI
-
-  ; initialize interrupt enable register - Set, CA1
-  LDA #$82
-  STA IER
-  ; initialize peripheral control register - CA1 to rising edge
-  ; when it goes to high, it means that keyboard scan code transfer has been done
-  LDA #$01
-  STA PCR
-
   ;;; set data directions ;;;
   ; set all pins on port B to output(to LCD monitor)
   LDA #%11111111
   STA DDRB
-  ; set all pins on port A to input(from keyboard)
-  LDA #%00000000
+
+  ; open
+  LDA #CS
+  STA PORTA
+  ; set directions
+  LDA #%00000111 ; nc/miso/nc/nc/nc/cs/mosi/sck
   STA DDRA
 
   ;;; set initial setting for display of LCD monitor ;;;
@@ -79,28 +76,36 @@ init:
   LDA #%00000001 ; Clear display
   JSR lcd_send_instruction
 
-  STZ PORTA ; begin packet
-  LDA #$D0
-  JSR spi_transceive ; send D0 instruction
-  JSR spi_transceive ; read result into A
+  ;;; initialization of variables ;;;
+  LDA #$00
+  STA spiin
+  STA spiout
   STA value
-  STZ value + 1
-  LDA #CS
-  STA PORTA ; end packet
+  STA value + 1
 
-  STZ PORTA ; begin packet
-  LDA #$75
+  ;;; initialize sensor ;;;
+  STZ PORTA ; #%00000000 - CS low, begin packet
+  LDA #$D0
+  JSR spi_transceive ; send D0 instruction(get id)
+  JSR spi_transceive ; store the result into Accumulator
+  STA value ; store the result(1-byte) into value
+  STZ value + 1
+  LDA #CS ; #%00000100 - CS high, end packet
+  STA PORTA
+
+  STZ PORTA ; #%00000000 - CS low, begin packet
+  LDA #$75 ; write configure register
   JSR spi_transceive ; send 75 instruction
   LDA #%00010000
   JSR spi_transceive ; send parameter
-  LDA #$74
+  LDA #$74 ; mesurement control register
   JSR spi_transceive ; send 74 instruction
   LDA #%00110111
   JSR spi_transceive ; send parameter
-  LDA #CS
-  STA PORTA ; end packet
+  LDA #CS ; #%00000100 - CS high, end packet
+  STA PORTA
 
-  JSR lcd_print
+  JSR lcd_print_num
 
 loop:
   LDA timer
@@ -108,53 +113,121 @@ loop:
   BEQ loop ; wait until timer reaches a value
   STZ timer ; reset timer
 
-  STZ PORTA ; begin packet
+  STZ PORTA ; #%00000000 - CS low, begin packet
   LDA #$FA
   JSR spi_transceive ; send FA instruction
-  JSR spi_transceive ; read result into A
-  STA value + 1
-  JSR spi_transceive ; read result into A
+  JSR spi_transceive ; read result(MSB of temperature data) into A
+  STA value + 1 ; 
+  JSR spi_transceive ; read result(LSB of temperature data) into A
   STA value
-  LDA #CS
-  STA PORTA ; end packet
+  LDA #CS ; #%00000100 - CS high, end packet
+  STA PORTA
 
   LDA #%00000001 ; clear display
   JSR lcd_send_instruction
-  JSR lcd_print
+  JSR lcd_print_num
   JMP loop
 
 spi_transceive:
   STZ spiin ; clear the input buffer
-  STA spiout ; store the value of Accumulator(output data)
+  STA spiout ; store the value of Accumulator to spiout, which is an instruction or previous data
 
-  LDY #8 ; bit counter
+  ; loop through all 8-bits of instruction
+  LDY #8 ; store loop counter in Y register
   LDA #MOSI ; Accumulator = MOSI bit mask
 
 spi_loop:
-  ASL spiout ; shift left Accumulator and MSB is going to carry bit
-  BCS spi_1 ; if carry bit is 1
-  TRB PORTA ; set MOSI low
+  ASL spiout ; shift left, which means loop, spiout and MSB, the bit that we gonna send, is going to carry bit
+
+  ; if next bit to send is 1 -> MOSI 1
+  ; if next bit to send is 0 -> MOSI 0
+  BCS spi_1 ; if (carry) bit is 1
+  TRB PORTA ; else, set MOSI low
   JMP spi_2
 
 spi_1:
   TSB PORTA ; set MOSI high
 
 spi_2:
+  ; clock high, data transmitted
   INC PORTA ; set SCK high
-  BIT PORTA
-  CLC
-  BVC spi_3
-  SEC
+
+  ; store data comes from sensor into overflow flag
+  BIT PORTA ; put MISO bit(index 6) into overflow flag
+  CLC ; clear carry flag
+
+  ; if overflow bit(input bit) is 0 -> carry flag 0
+  ; if overflow bit(input bit) is 1 -> carry flag 1
+  BVC spi_3 ; if overflow flag is low
+  SEC ; else, set carry flag
 
 spi_3:
-  ROL spiin
-  DEC PORTA
-  DEY
-  BNE spi_loop
+  ROL spiin ; rotate carry flag into recieve buffer's LSB
+
+  ; clock low
+  DEC PORTA ; set SCK low
+  DEY ; decrement index
+  BNE spi_loop ; if index is not zero, continues loop
+  
+  ; else put the 8-bit received data into Accumulator
   LDA spiin
-  CLC
+  CLC ; clear carry flag
+
   RTS
 
+lcd_print_num:
+div_start:
+  LDA #0
+  STA mod10
+  STA mod10 + 1
+
+  CLC ; clear the carry bit
+
+  LDX #16 ; index of div_loop
+div_loop:
+  ;;; rotate left 1-bit quotient and remainder ;;;
+  ROL value
+  ROL value + 1
+  ROL mod10
+  ROL mod10 + 1
+
+  ;;; a, y = dividend - divisor ;;;
+  SEC ; set carry bit to check the '- 10' operation result is negative or not
+  LDA mod10
+  SBC #10
+  TAY ; store value of Accumulator to Y register
+  LDA mod10 + 1
+  SBC #0
+
+  BCC decrement_index ; branch if carry is clear, that is, if dividend < divisor
+  ; when if carry bit is 1
+  STY mod10 ; store Y register value to memory(mod10)
+  STA mod10 + 1 ; store Accumulator value to memory(mod10 + 1)
+
+decrement_index:
+  DEX
+  BNE div_loop
+
+  ; shift in the last bit of the quotient
+  ROL value
+  ROL value + 1
+
+  ; get number character
+  LDA mod10
+  CLC ; because of how ADC instruction works
+  ADC #"0" ; add memory to Accumulator with Carry bit
+
+  ; print out
+  JSR ram_push_char
+
+  ; check value is zero or not
+  LDA value
+  ORA value + 1
+
+  BNE div_start ; if value is not zero
+
+  ;;; write letters in LCD monitor ;;;
+  LDX #0
 lcd_print:
   ; load next character
   LDA message, x
@@ -165,9 +238,32 @@ lcd_print:
   INX
   JMP lcd_print
 
-number: .word 0
-
   ;;; subrutines ;;;
+ram_push_char:
+  PHA ; push new character onto stack
+  LDY #0 ; start index of string
+
+push_char_loop:
+  ; get original character
+  LDA message, y
+  TAX ; store it in X register
+
+  ; put previous character at current position
+  PLA
+  STA message, y
+
+  ; put current character onto stack
+  INY
+  TXA
+  PHA
+
+  BNE push_char_loop ; if current character is not zero
+
+  ; put null character at the end of the string
+  PLA
+  STA message, y
+
+  RTS
 
 lcd_init:
   ; sending instruction protocol
@@ -298,16 +394,6 @@ nmi_handler:
   RTI ; return from interrupt
 
 irq_handler:
-  ; store original value of Accumulator
-  PHA
-
-  ; read data, clearing the interrupt
-  LDA PORTA
-  STA counter ; store it into counter variable
-  ; our loop is printing counter continuously, so counter value is gonna be printed out to LCD monitor
-
-  ; restore original value of Accumulator from the stack
-  PLA
 
   RTI ; return from interrupt
 
