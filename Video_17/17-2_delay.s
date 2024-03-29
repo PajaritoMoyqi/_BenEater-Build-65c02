@@ -3,7 +3,7 @@
 ;    Vector table: init_loop function is mapped at 0xFFFC.
 ;  I/O controller(W65C22) is mapped from 0x6000 to 0x7FFF. - to make output data meaningful
 ;    I/O controller setting registers are mapped from 0x6000 to 0x600F.
-;      All pins of port A is for sensor(BME280) I/O, all pins of port B is for data output when using LCD monitor connected.
+;      All pins of port B is for data output when using LCD monitor connected.
 ;  RAM(HM62256B) is mapped from 0x0000 to 0x3FFF. - to get memory for stack(in W65C02S, stack has address from 0x0100 to 0x01FF)
 ;    Stack is mapped for 0x0100 to 0x01FF.
 ;  ..........................................................................................

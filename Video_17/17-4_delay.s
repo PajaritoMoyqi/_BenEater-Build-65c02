@@ -9,7 +9,7 @@
 ;  ..........................................................................................
 
 ;  ..........................................................................................
-;  This code shows simple delay using single loop.
+;  This code shows delay w/ I/O controller timer1, in free-run mode.
 ;
 ;  ¡ Note that now we are using port B to transfer flag bits, and port A as a main route where data transmition occurs !
 ;  all pins of port B is connected to LCD monitor where PB0 to PB3 is connected to DB4 to DB7 of LCD monitor,
@@ -20,30 +20,76 @@ PORTB = $6000
 PORTA = $6001
 DDRB = $6002
 DDRA = $6003
+T1CL = $6004 ; T1 Low-Order Counter
+T1CH = $6005 ; T1 High-Order Counter
+ACR = $600B ; Auxiliary Control Register
+IFR = $600D ; Interrupt Flag Register
+IER = $600E ; Interrupt Enable Register
+
+ticks = $00 ; interrupt counter, 4-bytes
+elapsed_time = $04 ; when we toggle LED, 1-byte
 
   .org $8000
 
 init:
+  ; set direction
   LDA #%11111111 ; set all pins on port A to output
   STA DDRA
+
   LDA #0
   STA PORTA
+  STA elapsed_time
+
+  JSR init_timer
 
 loop:
-  INC PORTA ; turn LED on
-  JSR delay
-  DEC PORTB ; turn LED off
-  JSR delay
+  JSR toggle_led
+
+  ;; can do other works while clock ticks ;;
+
   JMP loop
 
-delay:
-  LDX #$FF
-delay_1:
-  ; delay
-  NOP
+toggle_led:
+  SEC ; set carry bit to use it when subtract
+  LDA ticks
+  SBC elapsed_time
+  CMP #25 ; have 250ms elapsed? -> carry bit is set
+  BCC exit_toggle_led ; if carry bit is low
 
-  DEX
-  BNE delay_1
+  ; toggle LED
+  LDA #$01
+  EOR PORTA
+  STA PORTA
+
+  LDA ticks
+  STA elapsed_time
+
+exit_toggle_led
+  RTS
+
+  ;;; subrutines ;;;
+init_timer:
+  ; initialize variables
+  LDA #0
+  STA ticks
+  STA ticks + 1
+  STA ticks + 2
+  STA ticks + 3
+
+  ; timer setting as free-run mode
+  LDA #%01000000
+  STA ACR
+
+  ; 9998 is 0x270E -> 10ms
+  LDA #$0E
+  STA T1CL
+  LDA #$27
+  STA T1CH
+
+  ; timer setting to enable interrupt signal for timer1
+  LDA #%11000000
+  STA IER
+  CLI ; clear interrupt disable
 
   RTS
 
@@ -53,7 +99,16 @@ nmi_handler:
   RTI ; return from interrupt
 
 irq_handler:
+  BIT T1CL ; read T1CL -> automatically clear interrupt
+  INC ticks
+  BNE exit_irq_handler
+  INC ticks + 1
+  BNE exit_irq_handler
+  INC ticks + 2
+  BNE exit_irq_handler
+  INC ticks + 3
 
+exit_irq_handler:
   RTI ; return from interrupt
 
   ; from 0xFFFC we save 0x00 and 0x80 which is starting execution address
