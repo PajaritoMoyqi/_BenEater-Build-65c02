@@ -9,7 +9,7 @@
 ;  ..........................................................................................
 
 ;  ..........................................................................................
-;  This code receives data sent from sensor continuously.
+;  This code receives id data sent from sensor continuously.
 ;
 ;  ¡ Note that now we are using port B to transfer flag bits, and port A as a main route where data transmition occurs !
 ;  Now all pins of port A is connected to shift register which is connected to keyboard,
@@ -41,6 +41,7 @@ init_loop:
   STA DDRA
 
   ;;; bit bang $D0 %11010000 ;;;
+  ; $D0 is a memory address where ID exists.
   LDA #MOSI
   STA PORTA
   LDA #(SCK | MOSI) ; SCK is manual clock pulse here
