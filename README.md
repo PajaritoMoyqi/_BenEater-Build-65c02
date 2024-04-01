@@ -110,3 +110,12 @@ According to datasheet, D0-D3 pins are not used during 4-bit operation. Consider
 
 ### Video 18
 
+18-1_rs232.s: shows characters that comes from DTE<br>
+
+### Video 19
+
+No code
+
+### Video 20
+
+20-1_rs232.s: sends hardcoded character and shows characters that comes from DTE<br>

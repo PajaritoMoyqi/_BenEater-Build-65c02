@@ -65,7 +65,7 @@ toggle_led:
   LDA ticks
   STA elapsed_time
 
-exit_toggle_led
+exit_toggle_led:
   RTS
 
   ;;; subrutines ;;;
