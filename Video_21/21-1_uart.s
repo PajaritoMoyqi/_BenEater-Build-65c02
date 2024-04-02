@@ -2,26 +2,35 @@
 ;  EEPROM(AT28C256) is mapped from 0x8000 to 0xFFFF. - to program a computer
 ;    Vector table: inm handler is mapped at 0xFFFA, init function is mapped at 0xFFFC, irq handler is mapped at 0xFFFE.
 ;  I/O controller(W65C22) is mapped from 0x6000 to 0x7FFF. - to make output data meaningful
-;    I/O controller setting registers are mapped from 0x6000 to 0x600F.
-;      PA1 is for DTE output and PA6 is for DTE input, all pins of port B is for data output when using LCD monitor connected.
+;    I/O controller setting registers for LCD monitor are mapped from 0x6000 to 0x600F.
+;      All pins of port B is for data output when using LCD monitor connected.
+;    I/O controller setting registers for UART chip are mapped from 0x5000 to 0x5003.
+;    Now address from 0x7000 to 0x7FFF is forbidden.
 ;  RAM(HM62256B) is mapped from 0x0000 to 0x3FFF. - to get memory for stack(in W65C02S, stack has address from 0x0100 to 0x01FF)
 ;    Stack is mapped for 0x0100 to 0x01FF.
 ;  ..........................................................................................
 
 ;  ..........................................................................................
-;  This code sends hardcoded character and shows characters that comes from DTE.
+;  This code connects CPU to UART chip which is connected to RS-232 serial interface.
 ;
 ;  ¡ Note that now we are using port B to transfer flag bits, and port A as a main route where data transmition occurs !
-;  Now all pins of port A is connected to DTE using RS-232 protocol,
+;  Now all pins of port A is connected to UART chip which is connected to DTE using RS-232 protocol,
 ;  all pins of port B is connected to LCD monitor where PB0 to PB3 is connected to DB4 to DB7 of LCD monitor,
 ;  PB4 to RS, PB5 to RW and PB6 to E of LCD. I have no idea where PB7 is connected to.
 ;  ..........................................................................................
 
 ;;; I/O controller ;;;
+; LCD monitor
 PORTB = $6000 ; I/O signal through port B
 PORTA = $6001 ; I/O signal through port A
 DDRB = $6002 ; Data direction setting register for port B
 DDRA = $6003 ; Data direction setting register for port A
+
+; UART
+ACIA_DATA = $5000 ; data RT register
+ACIA_STATUS = $5001 ; status register
+ACIA_CMD = $5002 ; command register
+ACIA_CTRL = $5003 ; control register
 
 ; flags for PORTB
 E = %01000000
@@ -35,10 +44,6 @@ init:
   ; initialize stack pointer to 0x01FF
   LDX #$FF
   TXS
-
-  ; serial idle
-  LDA #1
-  STA PORTA
 
   ;;; set data directions ;;;
   ; set all pins on port B to output(to LCD monitor)

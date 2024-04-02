@@ -119,3 +119,13 @@ No code
 ### Video 20
 
 20-1_rs232.s: sends hardcoded character and shows characters that comes from DTE<br>
+
+### Video 21
+
+21-1_uart.s: connects CPU to UART chip which is connected to RS-232 serial interface<br>
+
+### Video 22
+
+22-1_uart.s: receives data from UART chip which is connected to RS-232 serial interface<br>
+22-2_uart.s: sends & receives data from UART chip which is connected to RS-232 serial interface(not working, because of a hardware bug)<br>
+22-3_uart.s: sends & receives data from UART chip which is connected to RS-232 serial interface(fixed the hardware bug)<br>
