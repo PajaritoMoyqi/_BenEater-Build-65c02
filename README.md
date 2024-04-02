@@ -128,3 +128,4 @@ No code
 
 22-1_uart.s: receives data from UART chip which is connected to RS-232 serial interface<br>
 22-2_uart.s: sends & receives data from UART chip which is connected to RS-232 serial interface(not working, because of a hardware bug)<br>
+22-3_uart.s: sends & receives data from UART chip which is connected to RS-232 serial interface(fixed the hardware bug)<br>
