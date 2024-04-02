@@ -5,6 +5,7 @@
 ;    I/O controller setting registers for LCD monitor are mapped from 0x6000 to 0x600F.
 ;      All pins of port B is for data output when using LCD monitor connected.
 ;    I/O controller setting registers for UART chip are mapped from 0x5000 to 0x5003.
+;    Now address from 0x7000 to 0x7FFF is forbidden.
 ;  RAM(HM62256B) is mapped from 0x0000 to 0x3FFF. - to get memory for stack(in W65C02S, stack has address from 0x0100 to 0x01FF)
 ;    Stack is mapped for 0x0100 to 0x01FF.
 ;  ..........................................................................................
@@ -63,7 +64,7 @@ init:
   LDA #%00000001 ; Clear display
   JSR lcd_send_instruction
 
-  ;;; intitial setting for UART
+  ;;; intitial setting for UART ;;;
   LDA #$00
   STA ACIA_STATUS ; soft reset (value not important), actually not needed but to show
   LDA #$1F ; one stop bit, word length 8 bit, receiver baud rate same, 19200 baud rate
