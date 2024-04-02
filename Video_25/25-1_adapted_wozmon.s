@@ -1,9 +1,11 @@
 ;  The WOZ Monitor for the Ben Eater 6502 Compu
 ;  Written by Steve Wozniak in 1976 and adapted & introduced by Ben Eater in 2023
 ;  Some annotations added by PajaritoMoyqi
-
-.org $8000
-.org $FF00
+.setcpu "65C02"
+.segment "WOZMON" ; to tell linker where this code should be located by 'bios.cfg' file
+;  Don't need .org in most cases because specifing address is job for the linker not for the assembler.
+; .org $8000
+; .org $FF00
 
 ; Page 0 Variables
 XAML            = $24           ;  Last "opened" location Low
@@ -164,7 +166,8 @@ TXDELAY:        DEC             ; Decrement A.
                 PLA             ; Restore Accumulator.
                 RTS             ; Return.
 
-               .org $FFFA
+               .segment "RESETVEC" ; to tell linker where this code should be located by 'bios.cfg' file
+              ;  .org $FFFA
                .word $0F00      ; NMI verctor
                .word RESET      ; RESET vector
                .word $0000      ; IRQ vector
