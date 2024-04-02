@@ -129,3 +129,15 @@ No code
 22-1_uart.s: receives data from UART chip which is connected to RS-232 serial interface<br>
 22-2_uart.s: sends & receives data from UART chip which is connected to RS-232 serial interface(not working, because of a hardware bug)<br>
 22-3_uart.s: sends & receives data from UART chip which is connected to RS-232 serial interface(fixed the hardware bug)<br>
+
+### Video 23
+
+wozmon.s: The WOZ Monitor for the Apple 1<br>
+23-1_adapted_wozmon.s: The WOZ Monitor for the Ben Eater 6502 Computer<br>
+23-2_hello_would.s: shows "Hello, would!"(intentional typo), which is gonna be mounted together with the WOZ Monitor program<br>
+
+### Video 24
+
+Also, you'd better(but not necessary) watch together "How Wozniak’s code for the Apple 1 works", although it's not included in Ben Eater's 6502 playlist.
+
+24-1_adapted_wozmon.s: The WOZ Monitor for Ben Eater 6502 Computer<br>
