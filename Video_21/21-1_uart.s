@@ -2,9 +2,9 @@
 ;  EEPROM(AT28C256) is mapped from 0x8000 to 0xFFFF. - to program a computer
 ;    Vector table: inm handler is mapped at 0xFFFA, init function is mapped at 0xFFFC, irq handler is mapped at 0xFFFE.
 ;  I/O controller(W65C22) is mapped from 0x6000 to 0x7FFF. - to make output data meaningful
-;    I/O controller setting registers are mapped from 0x6000 to 0x600F.
+;    I/O controller setting registers for LCD monitor are mapped from 0x6000 to 0x600F.
 ;      All pins of port B is for data output when using LCD monitor connected.
-;    I/O controller setting registers are mapped from 0x5000 to 0x5003.
+;    I/O controller setting registers for UART chip are mapped from 0x5000 to 0x5003.
 ;  RAM(HM62256B) is mapped from 0x0000 to 0x3FFF. - to get memory for stack(in W65C02S, stack has address from 0x0100 to 0x01FF)
 ;    Stack is mapped for 0x0100 to 0x01FF.
 ;  ..........................................................................................

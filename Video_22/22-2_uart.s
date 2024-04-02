@@ -10,7 +10,10 @@
 ;  ..........................................................................................
 
 ;  ..........................................................................................
-;  This code receives data from UART chip which is connected to RS-232 serial interface.
+;  This code sends & receives data from UART chip which is connected to RS-232 serial interface.
+;
+;  ¡ Note that UART chip(W65C51S) has a bug in rx buffer status flag of status register !
+;  So, although this code has no error, it's not working.
 ;
 ;  ¡ Note that now we are using port B to transfer flag bits, and port A as a main route where data transmition occurs !
 ;  Now all pins of port A is connected to UART chip which is connected to DTE using RS-232 protocol,
@@ -71,16 +74,47 @@ init:
   LDA #$0B ; parity mode disable, not use echo mode, disable interrupt, IRQB disable, data terminal ready although we don't use it
   STA ACIA_CMD
 
+  ; send pre-determined text message
+  LDX #0
+uart_send_msg:
+  LDA message, x
+  BEQ uart_send_msg_done ; if we meet null character, it's done
+
+  JSR uart_send_char
+  INX
+  JMP uart_send_msg
+
+uart_send_msg_done:
+
   ; check received data exists
-rx_wait_loop:
+uart_rx_wait_loop:
   LDA ACIA_STATUS
   AND #$08 ; check rx buffer status flag
-  BEQ rx_wait_loop
+  BEQ uart_rx_wait_loop
 
   ; print received data onto LCD monitor
   LDA ACIA_DATA
   JSR lcd_print_char
+
+  JSR uart_send_char ; echo
+
   JMP rx_wait
+
+uart_send_char:
+  STA ACIA_DATA ; we gonna trasmit it
+  PHA
+
+  ; check transmiter data buffer is full or not
+uart_tx_wait_loop:
+  LDA ACIA_STATUS
+  AND #10 ; check tx buffer status flag
+  BEQ uart_tx_wait_loop
+  
+  PLA ; if transmiter data register is not full, get our data to transmit
+
+  RTS
+
+message: .asciiz "Hello, world!"
 
 lcd_init:
   ; sending instruction protocol
