@@ -119,3 +119,7 @@ No code
 ### Video 20
 
 20-1_rs232.s: sends hardcoded character and shows characters that comes from DTE<br>
+
+### Video 21
+
+21-1_uart.s: connects CPU to UART chip which is connected to RS-232 serial interface<br>
