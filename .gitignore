@@ -7,3 +7,4 @@ vobjdump.*
 *.bin
 *.out
 *.o
+*.sym

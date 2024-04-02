@@ -3,7 +3,7 @@
 ;  Some annotations added by PajaritoMoyqi
 .setcpu "65C02"
 .segment "WOZMON" ; to tell linker where this code should be located by 'bios.cfg' file
-;  Don't need .org in most cases because specifing address is job for the linker not for the assembler.
+;;  Don't need .org in most cases because specifing address is job for the linker not for the assembler.
 ; .org $8000
 ; .org $FF00
 
@@ -17,12 +17,13 @@ H               = $29           ;  Hex value parsing High
 YSAV            = $2A           ;  Used to see if hex value is given
 MODE            = $2B           ;  $00=XAM, $74=STOR, $B8=BLOCK XAM
 
+;; Now it is defined in 'bios.s' which is linked to this file
 ; Other Variables
-IN              = $0200         ;  Input buffer to $027F
-ACIA_DATA       = $5000         ;  data RT register
-ACIA_STATUS     = $5001         ;  status register
-ACIA_CMD        = $5002         ;  command register
-ACIA_CTRL       = $5003         ;  control register
+; IN              = $0200         ;  Input buffer to $027F
+; ACIA_DATA       = $5000         ;  data RT register
+; ACIA_STATUS     = $5001         ;  status register
+; ACIA_CMD        = $5002         ;  command register
+; ACIA_CTRL       = $5003         ;  control register
 
 RESET:          CLD             ; Clear decimal arithmetic mode.
                 CLI
@@ -166,8 +167,9 @@ TXDELAY:        DEC             ; Decrement A.
                 PLA             ; Restore Accumulator.
                 RTS             ; Return.
 
-               .segment "RESETVEC" ; to tell linker where this code should be located by 'bios.cfg' file
-              ;  .org $FFFA
-               .word $0F00      ; NMI verctor
-               .word RESET      ; RESET vector
-               .word $0000      ; IRQ vector
+              ;; also it goes to 'bios.s' file
+              ;  .segment "RESETVEC" ; to tell linker where this code should be located by 'bios.cfg' file
+              ; ;  .org $FFFA
+              ;  .word $0F00      ; NMI verctor
+              ;  .word RESET      ; RESET vector
+              ;  .word $0000      ; IRQ vector
