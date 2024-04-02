@@ -123,3 +123,7 @@ No code
 ### Video 21
 
 21-1_uart.s: connects CPU to UART chip which is connected to RS-232 serial interface<br>
+
+### Video 22
+
+22-1_uart.s: receives data from UART chip which is connected to RS-232 serial interface<br>
