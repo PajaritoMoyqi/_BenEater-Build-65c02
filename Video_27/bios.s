@@ -96,6 +96,7 @@ IRQ_HANDLER: ; about 60 clock cycle(60ms)
 
   ; let UART chip know that we are handling interrupt, so that the interrupt signal goes high disable
   ; actually we are assuming that the only source of interrupt is incoming data
+  ; to make it clear, we connect DCDB pin and DSRB pin into ground voltage.
   LDA ACIA_STATUS
 
   LDA ACIA_DATA
