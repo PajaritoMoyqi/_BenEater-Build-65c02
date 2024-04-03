@@ -11,7 +11,7 @@
 .ifdef SYM1
         jmp     PR_WRITTEN_BY
 .endif
-# enhanced code to make start code address 0x8000
+; enhanced code to make start code address 0x8000
 .ifdef EATER
   JMP COLD_START
 .endif
