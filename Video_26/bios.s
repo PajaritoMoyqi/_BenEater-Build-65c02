@@ -7,6 +7,11 @@ ACIA_STATUS = $5001
 ACIA_CMD = $5002
 ACIA_CTRL = $5003
 
+LOAD:
+  RTS
+SAVE:
+  RTS
+
 ; Input a character from the serial interface.
 ; On return, carry flag indicates whether a key was pressed.
 ; If a key was pressed, the key value will be in the A register.
