@@ -1,8 +1,12 @@
 # Build a 6502 computer
 
-## About
+## Info
 
 All files for Ben Eater's incredible 6502(65c02) breadboard computer making lecture.
+
+Unfortunately, for budget issue, I couldn't examine this codes in my own Eater 6502 computer yet. Although I do my best to check my codes. So, if someone finds out some errors, please let me know about it :) Always thanks.
+
+I'm continuously gonna upload codes of new Ben Eater's video when it's uploaded.
 
 ## Structure
 
