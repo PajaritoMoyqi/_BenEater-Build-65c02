@@ -12,6 +12,7 @@ ACIA_CTRL = $5003
 ; If a key was pressed, the key value will be in the A register.
 ;
 ; Modifies: flag, A
+MONRDKEY:
 CHRIN:
   LDA ACIA_STATUS
   AND #$08
@@ -27,6 +28,7 @@ CHRIN:
 ; Output a character (from the A register) to the serial interface.
 ;
 ; Modifies: flags
+MONCOUT:
 CHROUT:
   PHA
   STA ACIA_DATA

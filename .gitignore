@@ -8,3 +8,6 @@ vobjdump.*
 *.out
 *.o
 *.sym
+
+# MS Basic
+msbasic/

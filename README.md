@@ -141,3 +141,12 @@ wozmon.s: The WOZ Monitor for the Apple 1<br>
 Also, you'd better(but not necessary) watch together "How Wozniak’s code for the Apple 1 works", although it's not included in Ben Eater's 6502 playlist.
 
 24-1_adapted_wozmon.s: The WOZ Monitor for Ben Eater 6502 Computer<br>
+
+### Video 25
+
+adapted_wozmon.s: Now it only contains WOZ Monitor code<br>
+bios.cfg: tells linker how to allocate the code in ROM/RAM etc<br>
+bios.s: simple bios file<br>
+
+### Video 26
+
