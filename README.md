@@ -150,3 +150,5 @@ bios.s: simple bios file<br>
 
 ### Video 26
 
+All changed codes from [original codes](https://github.com/mist64/msbasic "msbasic") are included.
+
