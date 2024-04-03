@@ -12,17 +12,70 @@ I'm continuously gonna upload codes of new Ben Eater's video when it's uploaded.
 
 ### Schematics
 
+#### Eater 6502 Schematics
+
 ![img](https://eater.net/schematics/6502.png)
-Eater 6502 Schematics
+
+#### Eater 6502 with Serial Interface Schematics
 
 ![img](https://eater.net/schematics/6502-serial.png)
-Eater 6502 with Serial Interface Schematics
 
 All images from [eater.net](https://eater.net "eater.net").
 
 ### Memory map
 
+#### Brief Sketch
 
+| Chip | Address | Description |
+|:---|:---|:---|
+| RAM | 0x0000 - 0x3FFF |  |
+|  | 0x4000 - 0x4FFF | Unused |
+| UART | 0x5000 - 0x5FFF |  |
+| VIA | 0x6000 - 0x6FFF |  |
+|  | 0x7000 - 0x7FFF | Forbidden |
+| ROM | 0x8000 - 0xFFFF |  |
+
+#### Detailed map
+
+| Chip | Address | Description | Installed |
+|:---|:---|:---|:---|
+| RAM | 0x0000 - 0x00FF | Zero Page | V26 |
+| RAM | 0x0100 - 0x01FF | Stack | V6 |
+| RAM | 0x0200 - 0x02FF |  | V6 |
+| RAM | 0x0300 - 0x03FF | Input Buffer | V27 |
+| RAM | 0x0400 - 0x3FFF |  | V6 |
+|  | 0x4000 - 0x4FFF | Unused |  |
+| UART | 0x5000 | Data Register | V21 |
+| UART | 0x5001 | Status Register | V21 |
+| UART | 0x5002 | Command Register | V21 |
+| UART | 0x5003 | Control Register | V21 |
+| UART | 0x5004 - 0x5FFF |  | V21 |
+| VIA | 0x6000 | I/O Register B | V3 |
+| VIA | 0x6001 | I/O Register A | V3 |
+| VIA | 0x6002 | Data Direction Register B | V3 |
+| VIA | 0x6003 | Data Direction Register A | V3 |
+| VIA | 0x6004 | T1 Low-Order Latches/Counter | V3 |
+| VIA | 0x6005 | T1 High-Order Counter | V3 |
+| VIA | 0x6006 | T1 Low-Order Latches | V3 |
+| VIA | 0x6007 | T1 High-Order Latches | V3 |
+| VIA | 0x6008 | T2 Low-Order Latches/Counter | V3 |
+| VIA | 0x6009 | T2 High-Order Counter | V3 |
+| VIA | 0x600A | Shift Register | V3 |
+| VIA | 0x600B | Auxiliary Control Register | V3 |
+| VIA | 0x600C | Peripheral Control Register | V3 |
+| VIA | 0x600D | Interrupt Flag Register | V3 |
+| VIA | 0x600E | Interrupt Enable Register | V3 |
+| VIA | 0x600F | Handshake Register | V3 |
+| VIA | 0x6010 - 0x6FFF |  | V3 |
+| VIA | 0x7000 - 0x7FFF | Forbidden | V21 |
+| ROM | 0x8000 - 0x???? | BIOS routine | V25 |
+| ROM | 0x???? - 0xFDFF |  | V2 |
+| ROM | 0xFE00 - 0xFFF9 | Wozmon | V26 |
+| ROM | 0xFFFA - 0xFFFB | NMI Vector | V2 |
+| ROM | 0xFFFC - 0xFFFD | Init Vector | V2 |
+| ROM | 0xFFFE - 0xFFFF | IRQ Vector | V2 |
+
+'V' in 'installed' means Video.
 
 ## Code
 
