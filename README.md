@@ -138,7 +138,7 @@ wozmon.s: The WOZ Monitor for the Apple 1<br>
 
 ### Video 24
 
-Also, you'd better(but not necessary) watch together "How Wozniak’s code for the Apple 1 works", although it's not included in Ben Eater's 6502 playlist.
+Also, you'd better(but not necessarily) watch together "How Wozniak’s code for the Apple 1 works", although it's not included in Ben Eater's 6502 playlist.
 
 24-1_adapted_wozmon.s: The WOZ Monitor for Ben Eater 6502 Computer<br>
 
@@ -152,3 +152,8 @@ bios.s: simple bios file<br>
 
 All changed codes from [original codes](https://github.com/mist64/msbasic "msbasic") are included.
 
+### Video 27
+
+All changed codes from [original codes](https://github.com/mist64/msbasic "msbasic") are included.
+
+Only adapted_wozmon.s, bios.s, defines_eater.s and eater.cfg has been changed from previous video.
