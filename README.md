@@ -8,7 +8,13 @@ All files for Ben Eater's incredible 6502(65c02) breadboard computer making lect
 
 ### Schematics
 
+![img](https://eater.net/schematics/6502.png)
+Eater 6502 Schematics
 
+![img](https://eater.net/schematics/6502-serial.png)
+Eater 6502 with Serial Interface Schematics
+
+All images from [eater.net](https://eater.net "eater.net").
 
 ### Memory map
 
