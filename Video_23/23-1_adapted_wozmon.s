@@ -2,6 +2,9 @@
 ;  Written by Steve Wozniak in 1976 and adapted & introduced by Ben Eater in 2023
 ;  Some annotations added by PajaritoMoyqi
 
+.org $8000
+.org $FF00
+
 ; Page 0 Variables
 XAML            = $24           ;  Last "opened" location Low
 XAMH            = $25           ;  Last "opened" location High

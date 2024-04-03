@@ -6,3 +6,5 @@ vobjdump.*
 # result files
 *.bin
 *.out
+*.o
+*.sym
