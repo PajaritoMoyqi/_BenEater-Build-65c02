@@ -71,9 +71,9 @@ All images from [eater.net](https://eater.net "eater.net").
 | ROM | 0x8000 - 0x???? | BIOS routine | V25 |
 | ROM | 0x???? - 0xFDFF |  | V2 |
 | ROM | 0xFE00 - 0xFFF9 | Wozmon | V26 |
-| ROM | 0xFFFA - 0xFFFB | NMI Vector | V2 |
-| ROM | 0xFFFC - 0xFFFD | Init Vector | V2 |
-| ROM | 0xFFFE - 0xFFFF | IRQ Vector | V2 |
+| ROM | 0xFFFA - 0xFFFB | NMI Vector | V11 |
+| ROM | 0xFFFC - 0xFFFD | Init Vector | V1 |
+| ROM | 0xFFFE - 0xFFFF | IRQ Vector | V11 |
 
 'V' in 'installed' means Video.
 
